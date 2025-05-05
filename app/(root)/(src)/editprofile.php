@@ -4,7 +4,14 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
-require 'efa_user_db.php'; // Include database connection
+// $servername = "localhost";
+//     $username = "root"; // Change if needed
+//     $password = "";
+//     $database = "job_connext"; // Change if different
+    
+//     $conn = new mysqli($servername, $username, $password, $database);
+
+require 'db_connection.php'; // Include database connection
 
 $data = json_decode(file_get_contents("php://input"), true);
 
