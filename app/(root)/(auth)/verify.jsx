@@ -226,7 +226,7 @@ export default function VerifyScreen({ navigation }) {
       if (data.success) {
         Alert.alert("Success", "OTP Verified!", [{ 
           text: "OK", 
-          onPress: () => navigation.replace("/login") // Correct navigation
+          onPress: () => router.push("/login") // Correct navigation
         }]);
       } else {
         Alert.alert("Error", data.error || "Invalid OTP. Please try again.");
@@ -272,7 +272,9 @@ export default function VerifyScreen({ navigation }) {
       </View>
 
       <TouchableOpacity style={styles.verifyButton} onPress={verifyOTP}>
-        <Text style={styles.verifyText}>VERIFY</Text>
+        <Link href='/login'>
+          <Text style={styles.verifyText}>VERIFY</Text>
+        </Link>
       </TouchableOpacity>
 
       <View style={styles.resendContainer}>

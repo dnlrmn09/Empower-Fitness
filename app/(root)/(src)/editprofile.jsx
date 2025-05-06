@@ -46,7 +46,7 @@ const UserProfile = () => {
   };
 
   const handleSaveAccount = async () => {
-    const response = await fetch('http://localhost/EFA/editprofile.php', {
+    const response = await fetch('http://localhost/editprofile.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

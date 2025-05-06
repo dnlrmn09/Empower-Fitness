@@ -68,7 +68,7 @@ export default function HomeScreen() {
         {/* Welcome Section */}
         <View style={styles.headerContainer}>
             <Text style={styles.welcomeText}>Welcome,</Text>
-            <Text style={styles.userName}>User!</Text>
+            <Text style={styles.userName}>Clyde!</Text>
         </View>
 
         {/* Activities Progress Section */}
@@ -77,17 +77,17 @@ export default function HomeScreen() {
           <View style={styles.activitiesRow}>
             <View style={styles.activityItem}>
               <FontAwesome name="fire" size={30} color="black" />
-              <Text style={styles.activityValue}>2116</Text>
+              <Text style={styles.activityValue}>0</Text>
               <Text style={styles.activityLabel}>Calories</Text>
             </View>
             <View style={styles.activityItem}>
               <FontAwesome name="clock-o" size={30} color="black" />
-              <Text style={styles.activityValue}>24</Text>
+              <Text style={styles.activityValue}>0</Text>
               <Text style={styles.activityLabel}>Hours</Text>
             </View>
             <View style={styles.activityItem}>
               <FontAwesome name="check-circle" size={30} color="black" />
-              <Text style={styles.activityValue}>16</Text>
+              <Text style={styles.activityValue}>0</Text>
               <Text style={styles.activityLabel}>Complete Exercises</Text>
             </View>
           </View>
