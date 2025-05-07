@@ -37,7 +37,7 @@ const ProfilePage = () => {
     <View style={styles.profileContainer}>
       {/* Profile Header */}
       <View style={styles.profileHeader}>
-        <Image source={require('../../../assets/images/jam.jpeg')} style={styles.profileImage} />
+        <Image source={require('../../../assets/images/proficon.png')} style={styles.profileImage} />
         <Text style={styles.profileName}>Jamaielyn Gascon</Text>
         <Text style={styles.profileId}>ID: 19237458673469</Text>
       </View>

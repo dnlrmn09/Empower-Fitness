@@ -89,7 +89,7 @@ const ProfilePage = () => {
         <View style={styles.profilePictureSection}>
           <Image
             source={
-              profileImage ? { uri: profileImage } : require('../../../assets/images/jam.jpeg')
+              profileImage ? { uri: profileImage } : require('../../../assets/images/proficon.png')
             }
             style={styles.profileImage}
           />
@@ -97,30 +97,30 @@ const ProfilePage = () => {
 
         <View style={styles.profileInfo}>
           <View style={styles.profileNameContainer}>
-            <Text style={styles.profileName}>Jamaielyn Gascon</Text>
+            <Text style={styles.profileName}>Xevier Clyde Bitancor</Text>
             <Link href="/editprofile">
               <Icon name="pencil" size={20} color="#555" />
             </Link>
           </View>
-          <Text style={styles.profileUsername}>@BbyNashji18</Text>
+          <Text style={styles.profileUsername}>@Empty24</Text>
         </View>
 
         <View style={styles.details}>
           <View style={styles.row}>
             <Text style={styles.label}>Sex:</Text>
-            <Text style={styles.value}>Female</Text>
+            <Text style={styles.value}>Male</Text>
           </View>
           <View style={styles.line}></View> {/* Horizontal Line */}
 
           <View style={styles.row}>
             <Text style={styles.label}>Age:</Text>
-            <Text style={styles.value}>21</Text>
+            <Text style={styles.value}>23</Text>
           </View>
           <View style={styles.line}></View> {/* Horizontal Line */}
 
           <View style={styles.row}>
             <Text style={styles.label}>Birthdate:</Text>
-            <Text style={styles.value}>5-18-03</Text>
+            <Text style={styles.value}>2001/10/02</Text>
           </View>
           <View style={styles.line}></View> {/* Horizontal Line */}
 

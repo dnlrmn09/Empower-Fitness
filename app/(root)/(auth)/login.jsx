@@ -6,8 +6,8 @@ import {
   Image, ScrollView,
 } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import toastr from "toastr";
-import "toastr/build/toastr.min.css"; // Make sure you import the CSS
+//import toastr from "toastr";
+//import "toastr/build/toastr.min.css"; // Make sure you import the CSS
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -21,9 +21,9 @@ export default function LoginScreen({ navigation }) {
 
   const router = useRouter();
 
-  const handlesubmit = () => {   
+  const handleSubmit = () => {   
     console.log('Login button clicked');
-    toastr.success('Login Successfully', {position: 'top-center'});
+    //toastr.success('Login Successfully', {position: 'top-center'});
     router.push('/home');  
   };
 
@@ -32,7 +32,7 @@ export default function LoginScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.topBackground}>
           <TouchableOpacity style={styles.backButton}>
-            <Link href="/index">
+            <Link href="/">
               <Image source={require('../../../assets/images/back.png')} style={styles.backIcon} />
             </Link>
           </TouchableOpacity>
@@ -65,7 +65,7 @@ export default function LoginScreen({ navigation }) {
 
           {error ? <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text> : null}
 
-          <TouchableOpacity style={styles.loginButton} onPress={handlesubmit}> 
+          <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}> 
             <Text style={styles.loginText}>LOG IN</Text>
           </TouchableOpacity>
 
