@@ -100,6 +100,17 @@ export default function RegisterScreen({ navigation }) {
     setError('');
     router.push('/verify'); // Navigate to verification screen after success
   };
+
+  const isPasswordValid = () => {
+    return (
+      /.{8,}/.test(password) &&
+      /[A-Z]/.test(password) &&
+      /[a-z]/.test(password) &&
+      /[0-9]/.test(password)
+    );
+  };
+  
+  const isFormValid = password === confirmPassword && isPasswordValid();  
   
   
 
@@ -169,14 +180,25 @@ export default function RegisterScreen({ navigation }) {
                 secureTextEntry={!showPassword}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
-              />
+              />  
             </View>
+            {password && confirmPassword && password !== confirmPassword ? (
+                <Text style={styles.errorText2}>Passwords do not match!</Text>
+              ) : null} 
           </View>
         </View>
 
-        <TouchableOpacity style={styles.registerbtn} onPress={handleRegister}>
+        <TouchableOpacity
+          style={[
+            styles.registerbtn,
+            { backgroundColor: isFormValid ? '#B4D2E7' : '#ccc' }, // change color if disabled
+          ]}
+          onPress={handleRegister}
+          disabled={!isFormValid}
+        >
           <Text style={styles.registerText}>REGISTER</Text>
         </TouchableOpacity>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -219,6 +241,7 @@ const styles = StyleSheet.create({
     marginTop: 45,
     width: 320,
     elevation: 3,
+    
   },
   label: {
     fontSize: 18,
@@ -266,4 +289,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
   },
+  errorText2: {
+    color: 'red',
+    fontSize: 14,
+    textAlign: 'center',
+    marginLeft: 25,
+    marginBottom: 10,
+  },
+  
+  
 });

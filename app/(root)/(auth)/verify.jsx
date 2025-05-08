@@ -224,7 +224,7 @@ export default function VerifyScreen({ navigation }) {
       console.log("Response Data:", data); // Debug API response
   
       if (data.success) {
-        Alert.alert("Success", "OTP Verified!", [{ 
+        Alert.alert("Success", data.success, [{ 
           text: "OK", 
           onPress: () => router.push("/login") // Correct navigation
         }]);
