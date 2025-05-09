@@ -212,7 +212,7 @@ export default function VerifyScreen({ navigation }) {
     }
   
     try {
-      const response = await fetch("http://localhost/verify-otp.php", {
+      const response = await fetch("http://192.168.68.104/verify-otp.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -224,7 +224,7 @@ export default function VerifyScreen({ navigation }) {
       console.log("Response Data:", data); // Debug API response
   
       if (data.success) {
-        Alert.alert("Success", "OTP Verified!", [{ 
+        Alert.alert("Success", data.success, [{ 
           text: "OK", 
           onPress: () => router.push("/login") // Correct navigation
         }]);

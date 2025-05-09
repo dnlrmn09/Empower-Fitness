@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router'; // Import useRouter for navigation
 
 const menuItems = [
   {
@@ -30,14 +30,37 @@ const menuItems = [
     text: "Privacy Policy",
     link: "/privacy", // Link to Privacy Policy page
   },
+  {
+    icon: "sign-out-alt",  // Add an icon for logout
+    text: "Logout",
+    action: "logout",  // Set action type for logout
+  },
 ];
 
 const ProfilePage = () => {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Clear the user session or authentication token here (e.g., using AsyncStorage, Redux, etc.)
+    // Example:
+    // AsyncStorage.removeItem('user_token'); 
+
+    // After clearing session, show a confirmation alert and navigate to the login page
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to log out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'OK', onPress: () => router.push('/login') }, 
+      ]
+    );
+  };
+
   return (
     <View style={styles.profileContainer}>
       {/* Profile Header */}
       <View style={styles.profileHeader}>
-        <Image source={require('../../../assets/images/jam.jpeg')} style={styles.profileImage} />
+        <Image source={require('../../../assets/images/proficon.png')} style={styles.profileImage} />
         <Text style={styles.profileName}>Jamaielyn Gascon</Text>
         <Text style={styles.profileId}>ID: 19237458673469</Text>
       </View>
@@ -45,15 +68,25 @@ const ProfilePage = () => {
       {/* Menu Items */}
       <ScrollView style={styles.menu}>
         {menuItems.map((item, index) => (
-          <Link key={index} href={item.link} asChild>
-            <TouchableOpacity style={styles.menuItem}>
+          item.action === 'logout' ? (
+            <TouchableOpacity key={index} style={styles.menuItem} onPress={handleLogout}>
               <View style={styles.menuItemContent}>
                 <FontAwesome5 name={item.icon} size={20} color="#555" />
                 <Text style={styles.menuItemText}>{item.text}</Text>
               </View>
               <FontAwesome5 name="chevron-right" size={16} color="#555" />
             </TouchableOpacity>
-          </Link>
+          ) : (
+            <Link key={index} href={item.link} asChild>
+              <TouchableOpacity style={styles.menuItem}>
+                <View style={styles.menuItemContent}>
+                  <FontAwesome5 name={item.icon} size={20} color="#555" />
+                  <Text style={styles.menuItemText}>{item.text}</Text>
+                </View>
+                <FontAwesome5 name="chevron-right" size={16} color="#555" />
+              </TouchableOpacity>
+            </Link>
+          )
         ))}
       </ScrollView>
     </View>

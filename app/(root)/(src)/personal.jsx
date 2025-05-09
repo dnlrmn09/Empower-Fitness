@@ -125,7 +125,7 @@ const getStatusColor = (status) => {
         <View style={styles.profilePictureSection}>
           <Image
             source={
-              profileImage ? { uri: profileImage } : require('../../../assets/images/jam.jpeg')
+              profileImage ? { uri: profileImage } : require('../../../assets/images/proficon.png')
             }
             style={styles.profileImage}
           />

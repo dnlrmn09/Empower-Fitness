@@ -1,7 +1,7 @@
 import { Link, useRouter } from 'expo-router';
 import { Alert } from 'react-native';
-import toastr from "toastr";
-import "toastr/build/toastr.min.css";
+//import toastr from "toastr";
+//import "toastr/build/toastr.min.css";
 
 import React, { useState } from 'react';
 import {
@@ -21,19 +21,36 @@ export default function RegisterScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState('');
   const [error, setError] = useState('');
   
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const evaluatePasswordStrength = (password) => {
+    let score = 0;
+  
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[a-z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++; // special character
+  
+    if (score <= 2) return 'Weak';
+    if (score === 3 || score === 4) return 'Average';
+    if (score === 5) return 'Strong';
+  };
+  
    
   const router = useRouter();
 
   const handleRegister = async () => {
     setPasswordError('');
     setError('');
-  
+    setPasswordStrength(''); // Hide password strength if there's an error
+    
     if (!email || !password || !confirmPassword) {
       setError('All fields are required!');
       return;
@@ -54,12 +71,13 @@ export default function RegisterScreen({ navigation }) {
     for (let rule of passwordRules) {
       if (!rule.test.test(password)) {
         setPasswordError(rule.message);
+        setPasswordStrength(''); // Hide strength when error occurs
         return;
       }
     }
   
     try {
-      const response = await fetch('http://localhost/register.php', {
+      const response = await fetch('http://192.168.68.104/register.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -78,10 +96,22 @@ export default function RegisterScreen({ navigation }) {
       setError('Something went wrong!');
     }
   
-    toastr.success('User registered successfully', { position: 'top-center' });
+    // toastr.success('User registered successfully', { position: 'top-center' });
     setError('');
     router.push('/verify'); // Navigate to verification screen after success
   };
+
+  const isPasswordValid = () => {
+    return (
+      /.{8,}/.test(password) &&
+      /[A-Z]/.test(password) &&
+      /[a-z]/.test(password) &&
+      /[0-9]/.test(password)
+    );
+  };
+  
+  const isFormValid = password === confirmPassword && isPasswordValid();  
+  
   
 
   return (
@@ -89,7 +119,7 @@ export default function RegisterScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.topBackground}>
           <TouchableOpacity style={styles.backButton}>
-            <Link href="/index">
+            <Link href="/">
               <Image source={require('../../../assets/images/back.png')} style={styles.backIcon} />
             </Link>
           </TouchableOpacity>
@@ -113,22 +143,33 @@ export default function RegisterScreen({ navigation }) {
           <View style={styles.inputGroup}>
           <Text style={styles.label}>Password :</Text>
           <View style={styles.passwordContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your password"
-              secureTextEntry={!showPassword}
-              value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-                setPasswordError('');
-              }}
-            />
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your password"
+            secureTextEntry={!showPassword}
+            value={password}
+            onChangeText={(text) => {
+              setPassword(text);
+              setPasswordError('');
+              setPasswordStrength(evaluatePasswordStrength(text));
+            }}
+          />
           </View>
           {passwordError ? (
             <Text style={styles.errorText}>{passwordError}</Text>
           ) : null}
+          {passwordStrength ? (
+            <Text style={{
+              color: passwordStrength === 'Strong' ? 'green' :
+                     passwordStrength === 'Average' ? 'orange' : 'red',
+              fontSize: 14,
+              marginTop: 5,
+              marginLeft: 5,
+            }}>
+              Strength: {passwordStrength}
+            </Text>
+          ) : null}
         </View>
-
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Confirm Password :</Text>
@@ -139,14 +180,25 @@ export default function RegisterScreen({ navigation }) {
                 secureTextEntry={!showPassword}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
-              />
+              />  
             </View>
+            {password && confirmPassword && password !== confirmPassword ? (
+                <Text style={styles.errorText2}>Passwords do not match!</Text>
+              ) : null} 
           </View>
         </View>
 
-        <TouchableOpacity style={styles.registerbtn} onPress={handleRegister}>
+        <TouchableOpacity
+          style={[
+            styles.registerbtn,
+            { backgroundColor: isFormValid ? '#B4D2E7' : '#ccc' }, // change color if disabled
+          ]}
+          onPress={handleRegister}
+          disabled={!isFormValid}
+        >
           <Text style={styles.registerText}>REGISTER</Text>
         </TouchableOpacity>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -189,6 +241,7 @@ const styles = StyleSheet.create({
     marginTop: 45,
     width: 320,
     elevation: 3,
+    
   },
   label: {
     fontSize: 18,
@@ -236,4 +289,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
   },
+  errorText2: {
+    color: 'red',
+    fontSize: 14,
+    textAlign: 'center',
+    marginLeft: 25,
+    marginBottom: 10,
+  },
+  
+  
 });

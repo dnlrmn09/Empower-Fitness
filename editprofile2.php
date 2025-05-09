@@ -4,8 +4,18 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
-
+<<<<<<<< HEAD:Database/editprofile.php
 require 'db_connection.php';
+========
+$servername = "localhost";
+    $username = "root"; // Change if needed
+    $password = "";
+    $database = "efa_user_db"; // Change if different
+    
+    $conn = new mysqli($servername, $username, $password, $database);
+
+//require 'db_connection.php'; // Include database connection
+>>>>>>>> b639260fab66314c6e8ae420afefbac061fdf345:editprofile.php
 
 $data = json_decode(file_get_contents("php://input"), true);
 
