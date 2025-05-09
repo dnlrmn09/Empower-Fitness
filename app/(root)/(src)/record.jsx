@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import { Link } from 'expo-router';
-import Calendar from './calendar'; // Import the new Calendar component
+import Calendar from '../../../components/calendar'; // Import the new Calendar component
 
 export default function RecordScreen({ navigation }) {
   const [selectedDate, setSelectedDate] = useState('');

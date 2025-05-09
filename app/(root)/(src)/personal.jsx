@@ -6,18 +6,26 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  TextInput,
   Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import {Link, useRouter} from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+
 const ProfilePage = () => {
   const [profileImage, setProfileImage] = useState(null);
-  const [weight, setWeight] = useState(80); // Default weight
-  const [height, setHeight] = useState(149); // Default height in cm
-  const [targetWeight, setTargetWeight] = useState(null); // Initially no target weight
+  const [weight, setWeight] = useState(''); // Default weight
+  const [height, setHeight] = useState(''); // Default height in cm
+  const [name, setName] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [sex, setSex] = useState('');
+  const [age, setAge] = useState('');
+  const [birthdate, setBirthdate] = useState('');
+  const [targetWeight, setTargetWeight] = useState(null);
+  const [bmi, setBmi] = useState(null);
+  const [weightStatus, setWeightStatus] = useState('');
+
   
   const handleImagePicker = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -40,41 +48,69 @@ const ProfilePage = () => {
     ]);
   };
 
+  const getWeightStatus = (bmi) => {
+  if (bmi < 16) return "Severely Underweight";
+  if (bmi >= 16 && bmi < 18.5) return "Underweight";
+  if (bmi >= 18.5 && bmi <= 24.9) return "Healthy Weight";
+  if (bmi > 24.9 && bmi <= 29.9) return "Overweight";
+  if (bmi >= 30 && bmi <= 34.9) return "Moderately Obese";
+  if (bmi > 34.9) return "Very Obese";
+  return "Unknown";
+};
+
+const getStatusColor = (status) => {
+  switch (status) {
+    case "Severely Underweight": return "#FF3D00";
+    case "Underweight": return "#FFA000";
+    case "Healthy Weight": return "#4CAF50";
+    case "Overweight": return "#FFC107";
+    case "Moderately Obese": return "#FF5722";
+    case "Very Obese": return "#D32F2F";
+    default: return "#333";
+  }
+};
+
   const router = useRouter();
 
-  // Calculate BMI
-  const calculateBMI = (weight, height) => {
-    const heightInMeters = height / 100; // Convert height to meters
-    const bmi = weight / (heightInMeters ** 2); // BMI formula
-    return bmi;
-  };
-
-  // Suggest target weight based on a healthy BMI range (18.5 - 24.9)
-  const calculateTargetWeight = (height) => {
-    const heightInMeters = height / 100; // Convert height to meters
-    const lowerBMI = 18.5;
-    const upperBMI = 24.9;
-
-    // Calculate target weight for lower and upper BMI
-    const lowerWeight = lowerBMI * (heightInMeters ** 2);
-    const upperWeight = upperBMI * (heightInMeters ** 2);
-
-    return { lowerWeight, upperWeight };
-  };
-
-  // Update target weight whenever the user updates their height or weight
-  const updateTargetWeight = () => {
-    const { lowerWeight, upperWeight } = calculateTargetWeight(height);
-    setTargetWeight({
-      lower: Math.round(lowerWeight),  // Rounded to nearest whole number
-      upper: Math.round(upperWeight),
-    });
-  };
-
-  // Call this function when the user changes weight or height
   React.useEffect(() => {
-    updateTargetWeight();
-  }, [height, weight]);
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch('http://localhost/personal.php?id=11');
+        const json = await response.json();
+        const weightValue = Number(json.user.weight || 0);
+        const heightValue = Number(json.user.height || 0);
+  
+        if (json.success) {
+          setName(json.user.name || '');
+          setNickname(json.user.nickname || '');
+          setSex(json.user.sex || '');
+          setAge(json.user.age || '');
+          setBirthdate(json.user.birthdate);
+          setWeight(weightValue);
+          setHeight(heightValue);
+
+
+          if (heightValue && weightValue) {
+            const heightInMeters = heightValue / 100;
+            const bmiValue = (Number(json.user.weight) / (heightInMeters ** 2)).toFixed(1);
+            setBmi(bmiValue);
+            setWeightStatus(getWeightStatus(bmiValue));
+
+            const lower = (18.5 * heightInMeters * heightInMeters).toFixed(1);
+            const upper = (24.9 * heightInMeters * heightInMeters).toFixed(1);
+            setTargetWeight({ lower, upper });
+          }
+          
+        } else {
+          console.warn('Failed to load profile:', json.message);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+  
+    fetchUserProfile();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -97,65 +133,61 @@ const ProfilePage = () => {
 
         <View style={styles.profileInfo}>
           <View style={styles.profileNameContainer}>
-            <Text style={styles.profileName}>Jamaielyn Gascon</Text>
+            <Text style={styles.profileName}>{name}</Text>
             <Link href="/editprofile">
               <Icon name="pencil" size={20} color="#555" />
             </Link>
           </View>
-          <Text style={styles.profileUsername}>@BbyNashji18</Text>
+          <Text style={styles.profileUsername}>@{nickname}</Text>
         </View>
 
         <View style={styles.details}>
           <View style={styles.row}>
             <Text style={styles.label}>Sex:</Text>
-            <Text style={styles.value}>Female</Text>
+            <Text style={styles.value}>{sex}</Text>
           </View>
           <View style={styles.line}></View> {/* Horizontal Line */}
 
           <View style={styles.row}>
             <Text style={styles.label}>Age:</Text>
-            <Text style={styles.value}>21</Text>
+            <Text style={styles.value}>{age}</Text>
           </View>
           <View style={styles.line}></View> {/* Horizontal Line */}
 
           <View style={styles.row}>
             <Text style={styles.label}>Birthdate:</Text>
-            <Text style={styles.value}>5-18-03</Text>
+            <Text style={styles.value}>{birthdate}</Text>
           </View>
           <View style={styles.line}></View> {/* Horizontal Line */}
 
           <View style={styles.row}>
             <Text style={styles.label}>Height:</Text>
-            <TextInput
-              style={styles.valueInput}
-              value={String(height)}
-              keyboardType="numeric"
-              onChangeText={(text) => setHeight(Number(text))}
-            />
+            <Text style={styles.value}>{height} cm</Text>
           </View>
           <View style={styles.line}></View> {/* Horizontal Line */}
 
           <View style={styles.row}>
             <Text style={styles.label}>Weight:</Text>
-            <TextInput
-              style={styles.valueInput}
-              value={String(weight)}
-              keyboardType="numeric"
-              onChangeText={(text) => setWeight(Number(text))}
-            />
+            <Text style={styles.value}>{weight} kg</Text>
           </View>
           <View style={styles.line}></View> {/* Horizontal Line */}
 
           <View style={styles.targetWeightSection}>
-            <Text style={styles.targetWeightText}>Target Weight:</Text>
-            {targetWeight ? (
-              <Text style={styles.bold}>
-                {targetWeight.lower}kg - {targetWeight.upper}kg
-              </Text>
-            ) : (
-              <Text style={styles.bold}>Calculating...</Text>
-            )}
+            <View style={styles.row}>
+              <View >
+                <Text style={styles.label}>Target Weight:</Text>
+                <Text style={styles.value}>
+                  {targetWeight ? `${targetWeight.lower}kg - ${targetWeight.upper}kg` : 'Calculating...'}
+                </Text>
+              </View>
+              <View style={{ marginLeft: 45 }}></View>
+              <View>
+                <Text style={styles.label}>Current Status:</Text>
+                <Text style={[styles.value, { color: getStatusColor(weightStatus) }]}>{weightStatus}</Text>
+              </View>
+            </View>
           </View>
+
         </View>
 
         <View style={styles.deleteButtonSection}>
@@ -311,6 +343,16 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontWeight: "bold",
+  },
+
+  statusText: {
+    marginTop: 4,
+    fontSize: 14,
+    color: "#333",
+  },
+  statusValue: {
+    fontWeight: "bold",
+    color: "#1e88e5", // blue, you can change to red/yellow based on severity
   },
 });
 

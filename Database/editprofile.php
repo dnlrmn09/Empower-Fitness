@@ -4,19 +4,12 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
-// $servername = "localhost";
-//     $username = "root"; // Change if needed
-//     $password = "";
-//     $database = "job_connext"; // Change if different
-    
-//     $conn = new mysqli($servername, $username, $password, $database);
-
-require 'db_connection.php'; // Include database connection
+require 'db_connection.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 
 // Check if all required fields are provided
-if (!isset($data['name'], $data['nickname'], $data['sex'], $data['birthdate'], $data['height'], $data['weight'])) {
+if (!isset($data['name'], $data['nickname'], $data['sex'], $data['age'], $data['birthdate'], $data['height'], $data['weight'])) {
     echo json_encode(["success" => false, "message" => "All fields are required"]);
     exit();
 }
@@ -25,20 +18,24 @@ if (!isset($data['name'], $data['nickname'], $data['sex'], $data['birthdate'], $
 $name = trim($data['name']);
 $nickname = trim($data['nickname']);
 $sex = trim($data['sex']);
+$age = intval($data['age']);
 $birthdate = trim($data['birthdate']);
 $height = floatval($data['height']);
 $weight = floatval($data['weight']);
 
 // Validate input
-if (empty($name) || empty($nickname) || empty($sex) || empty($birthdate) || !$height || !$weight) {
+if (
+    empty($name) || empty($nickname) || empty($sex) || empty($age) ||
+    empty($birthdate) || !is_numeric($height) || !is_numeric($weight)
+) {
     echo json_encode(["success" => false, "message" => "Invalid or missing input"]);
     exit();
 }
 
 // Insert into database
-$sql = "INSERT INTO user_profile (name, nickname, sex, birthdate, height, weight) VALUES (?, ?, ?, ?, ?, ?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssdd", $name, $nickname, $sex, $birthdate, $height, $weight);
+$sql = "INSERT INTO user_profile (name, nickname, sex, age, birthdate, height, weight) VALUES (?, ?, ?, ?, ?, ?, ?)";
+$stmt = $conn->prepare($sql); 
+$stmt->bind_param("sssisdd", $name, $nickname, $sex, $age, $birthdate, $height, $weight);
 
 if ($stmt->execute()) {
     echo json_encode(["success" => true, "message" => "User profile created successfully"]);

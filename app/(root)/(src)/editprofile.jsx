@@ -20,9 +20,10 @@ const UserProfile = () => {
   const [nickname, setNickname] = useState('');
   const [selectedOption, setSelectedOption] = useState("Other");
   const [birthdate, setBirthdate] = useState('');
+  const [age, setAge] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
-  const [targetWeight, setTargetWeight] = useState('');
+
 
 
   const handleImageChange = async () => {
@@ -55,6 +56,7 @@ const UserProfile = () => {
             name,
             nickname,
             sex: selectedOption,
+            age,
             birthdate,
             height,
             weight,
@@ -120,6 +122,15 @@ const UserProfile = () => {
                   <Picker.Item label="Other" value="other" />
                 </Picker> 
           {/* Other Form Inputs */}
+          
+          <Text>Age:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your age"
+            value={age}
+            onChangeText={(text) => setAge(text)}
+          />
+
           <Text>Birthday:</Text>
           <TextInput
             style={styles.input}
