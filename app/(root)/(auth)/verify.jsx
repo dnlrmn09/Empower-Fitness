@@ -175,6 +175,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import {
   SafeAreaView,
   View,
@@ -272,9 +273,9 @@ export default function VerifyScreen({ navigation }) {
       </View>
 
       <TouchableOpacity style={styles.verifyButton} onPress={verifyOTP}>
-        <Link href='/login'>
+        
           <Text style={styles.verifyText}>VERIFY</Text>
-        </Link>
+        
       </TouchableOpacity>
 
       <View style={styles.resendContainer}>
