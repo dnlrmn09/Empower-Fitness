@@ -146,7 +146,7 @@ const getStatusColor = (status) => {
             <Text style={styles.label}>Sex:</Text>
             <Text style={styles.value}>{sex}</Text>
           </View>
-          <View style={styles.line}></View> {/* Horizontal Line */}
+          <View style={styles.line}></View> {/* Horizontal Line */}``
 
           <View style={styles.row}>
             <Text style={styles.label}>Age:</Text>
