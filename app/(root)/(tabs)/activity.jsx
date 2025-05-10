@@ -49,7 +49,7 @@ const App = () => {
       <Text style={styles.headerText}>Exercise Categories :</Text>
       <View style={styles.categoryContainer}>
         <Link href="strength">
-          <ExerciseButton title="Strength" image={require('../../../assets/icons/strength.png')} bgColor="#D4CBE5" onPress={() => router.push('/strenght')}/>
+          <ExerciseButton title="Strength" image={require('../../../assets/icons/strength.png')} bgColor="#D4CBE5" onPress={() => router.push('/strength')}/>
         </Link>
         <Link href="flexibility">
           <ExerciseButton title="Flexibility" image={require('../../../assets/icons/flexibility.png')} bgColor="#75DBCD" onPress={() => router.push('/flexibility')}  />

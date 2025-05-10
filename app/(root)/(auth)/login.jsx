@@ -21,11 +21,42 @@ export default function LoginScreen({ navigation }) {
 
   const router = useRouter();
 
-  const handleSubmit = () => {   
-    console.log('Login button clicked');
-    //toastr.success('Login Successfully', {position: 'top-center'});
-    router.push('/home');  
-  };
+ const handleSubmit = async () => {
+  try {
+    const response = await fetch('http://192.168.68.104/login.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ email: email, password: password }),
+    });
+
+    // Check if the response status is OK (200)
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    // Check if the response is JSON
+    const contentType = response.headers.get('Content-Type');
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new Error('Expected JSON, but got ' + contentType);
+    }
+
+    const data = await response.json();
+
+    if (data.success) {
+      console.log('User logged in successfully');
+      router.push('/profile');
+    } else {
+      setError(data.message);
+    }
+  } catch (error) {
+    setError('Login failed. Please try again.');
+    console.log('Error:', error.message); // Log the actual error message
+  }
+};
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,6 +74,7 @@ export default function LoginScreen({ navigation }) {
           </View>
         </View>
 
+        {/* Login form */}  
         <View style={styles.formContainer}>
           <TextInput
             style={styles.input}
